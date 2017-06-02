@@ -1,0 +1,16 @@
+
+Aravinth - to rebase to the latest
+## commit - to be added
+## review - to be added
+## Go to WP/CSC branch (step 11)
+## Merge develop to local (step 12)
+## Push Merged changes to WP/CSC branch (step 13) 
+
+
+Aravinth - just to push small changes for correction.
+step 13
+
+Aravinth - to deliver to develop. (this is like deliver to default)
+step 12,13..16
+step 17 - Tagging, like creating baseline and recommending baseline. 
+step 18 - All swf files should be moved to artifactory.

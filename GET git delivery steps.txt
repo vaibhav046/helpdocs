@@ -1,0 +1,148 @@
+CSCvc73891        
+CSCvc23187-more than 7 days
+CSCvd97267
+CSCvd09773-font update
+export PROJECT='get'
+export BRANCH_NAME='CSCvc23187'
+export CDET='CSCvc23187'
+export TITLE='SUNGW-211 :Events upto only 7 days should be displayed in search results'
+export CORE_PATH='/cygdrive/c/get_new/FUSION_APPLICATION/UNITY_FLASH_EPG_CORE'
+export CODE_PATH='/cygdrive/c/get_new/'
+export UI_PATH='/cygdrive/c/get_new/FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET'
+
+
+## Go to develop (step 2)
+
+repo init --manifest-branch $PROJECT/develop --manifest-url ssh://gpk-apl-grt7.cisco.com:29418/MANIFESTS.git
+repo --no-pager forall -p --verbose --command 'git fetch origin --tags $REPO_RREV; git checkout $REPO_RREV'
+repo sync APPLICATION_ENGINES/FUSION_API FUSION_APPLICATION/UNITY_FLASH_EPG_CORE FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET MANIFESTS TOOLS
+repo --no-pager forall -p --verbose --command 'git checkout $REPO_RREV'
+
+## Create WP/CSC branch (step 3)
+
+
+## first go to get/develop (step 4)
+repo --no-pager forall -p --verbose --command "git fetch origin $PROJECT/develop"
+repo init --manifest-branch $PROJECT/develop --manifest-url ssh://gpk-apl-grt7.cisco.com:29418/MANIFESTS.git
+repo --no-pager forall -p --verbose --command 'git fetch origin --tags $REPO_RREV; git checkout $REPO_RREV'
+repo sync APPLICATION_ENGINES/FUSION_API FUSION_APPLICATION/UNITY_FLASH_EPG_CORE FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET MANIFESTS TOOLS
+repo --no-pager forall -p --verbose --command 'git checkout $REPO_RREV'
+
+## create branch (step 5)
+cd $CODE_PATH
+repo start $PROJECT/$BRANCH_NAME APPLICATION_ENGINES/FUSION_API FUSION_APPLICATION/UNITY_FLASH_EPG_CORE FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET
+repo forall APPLICATION_ENGINES/FUSION_API FUSION_APPLICATION/UNITY_FLASH_EPG_CORE FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET -p --verbose --command 'git push origin --set-upstream $PROJECT/$BRANCH_NAME'
+
+## Update MANIFESTS (step 6)
+cd MANIFESTS
+git fetch origin --tags $PROJECT/develop
+git checkout -b $PROJECT/$BRANCH_NAME origin/$PROJECT/develop
+# Add revisions in full-stack.xml
+git commit --all --message "Cisco-task: $CDET $TITLE"
+git push origin --set-upstream $PROJECT/$BRANCH_NAME
+cd ..
+
+## Go to WP/CSC branch (step 7)
+repo --no-pager forall MANIFESTS APPLICATION_ENGINES/FUSION_API FUSION_APPLICATION/UNITY_FLASH_EPG_CORE FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET -p --verbose --command 'git fetch origin $PROJECT/$BRANCH_NAME'
+repo init --manifest-branch $PROJECT/$BRANCH_NAME --manifest-url ssh://gpk-apl-grt7.cisco.com:29418/MANIFESTS.git
+repo --no-pager forall -p --verbose --command 'git fetch origin --tags $REPO_RREV; git checkout $REPO_RREV'
+repo sync APPLICATION_ENGINES/FUSION_API FUSION_APPLICATION/UNITY_FLASH_EPG_CORE FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET MANIFESTS TOOLS
+repo --no-pager forall -p --verbose --command 'git checkout $REPO_RREV'
+
+
+# Modify code..  (step 8)
+#(after code modification you have to commit both UI and CORE seperately)
+
+git commit --all --message "Cisco-task: CSCvd09653: SUNGW 197 - Season number is not displayed on the collapsed group on Search from My Archive"
+
+
+#(step 9)
+# Get it reviewed and submit (This will post it for review and will not go to main)
+#[Aravinth] - uncomment projects (all three lines), press x on keyboard to delete # char to uncomment. send it for review.
+#			  any rebase should be done after review. because repo upload is an inbetween stage it has not yet reached the branch.
+
+repo upload -t
+
+#[Aravinth] - after code review you have to submit it in the GPK site.
+
+
+
+
+
+## Tag WP/CSC branch  (step 10)
+export VERSION='162.1.12.1'
+cd APPLICATION_ENGINES/FUSION_API
+git checkout $PROJECT/$BRANCH_NAME
+git tag --annotate --message "$CDET: $TITLE" $PROJECT/$BRANCH_NAME/$VERSION
+git push origin $PROJECT/$BRANCH_NAME/$VERSION
+cd ../../FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS
+git checkout $PROJECT/$BRANCH_NAME
+git tag --annotate --message "$CDET: $TITLE" $PROJECT/$BRANCH_NAME/$VERSION
+git push origin $PROJECT/$BRANCH_NAME/$VERSION
+cd ../UNITY_FLASH_EPG_CORE
+git checkout $PROJECT/$BRANCH_NAME
+git tag --annotate --message "$CDET: $TITLE" $PROJECT/$BRANCH_NAME/$VERSION
+git push origin $PROJECT/$BRANCH_NAME/$VERSION
+cd ../../FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET
+git checkout $PROJECT/$BRANCH_NAME
+git tag --annotate --message "$CDET: $TITLE" $PROJECT/$BRANCH_NAME/$VERSION
+git push origin $PROJECT/$BRANCH_NAME/$VERSION
+cd ../../
+
+## Go to WP/CSC branch (step 11)
+repo --no-pager forall MANIFESTS APPLICATION_ENGINES/FUSION_API FUSION_APPLICATION/UNITY_FLASH_EPG_CORE FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET -p --verbose --command 'git fetch origin $PROJECT/$BRANCH_NAME'
+repo init --manifest-branch $PROJECT/$BRANCH_NAME --manifest-url ssh://gpk-apl-grt7.cisco.com:29418/MANIFESTS.git
+repo --no-pager forall -p --verbose --command 'git fetch origin --tags $REPO_RREV; git checkout $REPO_RREV'
+repo sync APPLICATION_ENGINES/FUSION_API FUSION_APPLICATION/UNITY_FLASH_EPG_CORE FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET MANIFESTS TOOLS
+repo --no-pager forall -p --verbose --command 'git checkout $REPO_RREV'
+
+## Merge develop to local (step 12)
+cd MANIFESTS
+US_REPOS=$( cat full-stack.xml | grep $PROJECT/$BRANCH_NAME | grep 'project name' | grep -v MANIFESTS | sed -e 's#.*project name="\([^"]*\).*#\1#')
+US_REPOS=$( cat full-stack.xml | grep $PROJECT/$BRANCH_NAME | grep 'project name' | sed -e 's#.*project name="\([^"]*\).*#\1#')
+cd ..
+repo --no-pager forall $US_REPOS -p --verbose --command 'git fetch origin $PROJECT/develop; git merge origin/$PROJECT/develop -m "Cisco-task: $CDET: [GET merge develop into $BRANCH_NAME"'
+
+## Push Merged changes to WP/CSC branch (step 13)
+repo --no-pager forall $US_REPOS -p --verbose --command 'git push origin --set-upstream $PROJECT/$BRANCH_NAME'
+
+## Deliver WP/CSC branch to develop (step 14)
+repo --no-pager forall $US_REPOS -p --verbose --command "git checkout $PROJECT/develop && git pull origin $PROJECT/develop && git merge origin/$PROJECT/$BRANCH_NAME -m 'Cisco-task: $CDET: [GET]GIT deliver from $BRANCH_NAME to develop' && git checkout $PROJECT/$BRANCH_NAME"
+
+#(step 15)
+cd MANIFESTS && git checkout $PROJECT/develop && git pull origin $PROJECT/develop
+# Clean MANIFESTS and update deps (step 16)
+git commit --all --message "Cisco-task: $CDET: [GET]GIT deliver from $BRANCH_NAME to develop" && git checkout $PROJECT/$BRANCH_NAME && cd ..
+
+repo --no-pager forall $US_REPOS -p --verbose --command "git push origin $PROJECT/develop"
+
+
+
+## Tag develop branch (step 17)
+export VERSION='172.14.0'
+cd APPLICATION_ENGINES/FUSION_API
+git checkout $PROJECT/develop
+git tag --annotate --message "$CDET: $TITLE" $PROJECT/develop/$VERSION
+git push origin $PROJECT/develop/$VERSION
+cd ../../FUSION_APPLICATION/UNITY_FLASH_EPG_STUBS
+git checkout $PROJECT/develop
+git tag --annotate --message "$CDET: $TITLE" $PROJECT/develop/$VERSION
+git push origin $PROJECT/develop/$VERSION
+cd ../UNITY_FLASH_EPG_CORE
+git checkout $PROJECT/develop
+git tag --annotate --message "$CDET: $TITLE" $PROJECT/develop/$VERSION
+git push origin $PROJECT/develop/$VERSION
+cd ../../FUSION_APPLICATION_2/UNITY_FLASH_EPG_UI_GET
+git checkout $PROJECT/develop
+git tag --annotate --message "$CDET: $TITLE" $PROJECT/develop/$VERSION
+git push origin $PROJECT/develop/$VERSION
+cd ../../
+
+## Upload to artifactory (step 18)
+
+# Go to artifact folder (folder that has the resources and fonts folder only to be uploaded)
+cd ~/artifact
+GZIP='--no-name' tar czf develop_epg_ci-$VERSION-resources.tar.gz *
+
+curl --user fusion-cable-deployer:uq7tnxs1lc --upload-file develop_epg_ci-$VERSION-resources.tar.gz --request PUT http://engci-maven-master.cisco.com/artifactory/Fusion-Cable-thirdparty-repo/com/cisco/data/UNITY_FLASH_EPG_UI_GET/get/develop_epg_ci/$VERSION/develop_epg_ci-$VERSION-resources.tar.gz
+ 

@@ -1,0 +1,45 @@
+boot -z -elf usbdisk0:86.26/drivers/vmlinuz
+
+boot second command:
+
+mkdir tmp
+mkdir /host
+mount -t vfat /dev/sdb1 /root/tmp
+mount /root/tmp/LittleEndian_india /host
+mkdir -p /host/results
+chmod 777 /host/results
+/host/fs/NDS/start.sh | sed -e 's/^NDS:.*SWF:/SWF:/g;s/^NDS:.*//g;/^$/d'
+
+setenv -p STARTUP "ifconfig .auto eth0;boot -z -elf usbdisk0:LittleEndian_india/drivers/vmlinuz"
+
+
+
+flash -noheader -size=60M usbdisk0:vmlinux flash0.kernel
+setenv -p STARTUP "boot -z -elf flash0.kernel:"
+
+e0b7b1008bc8
+ftp://get_diag_log@ftpd.ndsuk.com/getlog/GET-PACE7424-03_e0b7b1008bc8_91005cc8d2d840fe62e2348898cfff67.tgz
+
+
+
+
+
+Here are the instructions on how to replace the resources.
+
+1)      Download the vmlinux image from CI. The one you want is the GET Live rel-d DIAG BINARY FULL image.
+2)      Flash it into a box and start it up via serial. Watch the serial output. After the log file upload completes, but before the middleware starts, a message will be printed: 
+“Starting in 10 seconds, abort? [y]”
+3)      Press y and you’ll go to a terminal prompt.
+4)      Copy the new resources you want to test on to a USB drive and insert this into the USB port on the STB.
+5)      Next, replace the resources by executing the following on the terminal:
+
+
+mkdir /host
+mount -t vfat /dev/sdb1 /host
+rm -Rf /NDS/resources
+cp -pr /host/resources /NDS
+sync
+chmod -R 777 /NDS/resources
+cd /NDS/bin
+./PWM_Process
+

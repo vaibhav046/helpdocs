@@ -1,0 +1,16 @@
+
+flash -noheader -size=65M usbdisk0:vmlinux flash0.kernel     
+setenv -p STARTUP "boot -z -elf flash0.kernel:" 
+3:54 PM 
+
+boot -z -elf usbdisk0:vmlinux 
+3:54 PM 
+
+mkdir /host
+mount -t vfat /dev/sdb1 /host
+rm -Rf /NDS/resources
+cp -pr /host/LittleEndian/fs/NDS/resources /NDS
+sync
+chmod -R 777 /NDS/resources
+cd /NDS/bin
+./PWM_Process > /host/againnnn.txt & 
